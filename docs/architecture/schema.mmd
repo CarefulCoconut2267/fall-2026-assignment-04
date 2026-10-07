@@ -1,0 +1,58 @@
+erDiagram
+
+    users {
+        serial id PK
+        varchar email "UNIQUE NOT NULL"
+        varchar name
+        timestamp created_at "NOT NULL"
+    }
+
+    borrowers {
+        serial id PK
+        int user_id FK "UNIQUE NOT NULL"
+        varchar membership_number "UNIQUE NOT NULL"
+        varchar phone
+        varchar status "active | suspended"
+    }
+
+    authors {
+        serial id PK
+        varchar name "NOT NULL"
+        varchar bio
+    }
+
+    genres {
+        serial id PK
+        varchar name "UNIQUE NOT NULL"
+    }
+
+    books {
+        serial id PK
+        varchar title "NOT NULL"
+        varchar isbn "UNIQUE"
+        int genre_id FK "NOT NULL"
+        int published_year
+    }
+
+    book_authors {
+        serial id PK
+        int book_id FK "NOT NULL"
+        int author_id FK "NOT NULL"
+    }
+
+    loans {
+        serial id PK
+        int borrower_id FK "NOT NULL"
+        int book_id FK "NOT NULL"
+        timestamp loan_date "NOT NULL"
+        timestamp due_date "NOT NULL"
+        timestamp returned_date "nullable"
+        varchar status "active | returned | overdue"
+    }
+
+    users ||--o| borrowers : "has profile"
+    genres ||--o{ books : "categorizes"
+    books ||--o{ book_authors : "written by"
+    authors ||--o{ book_authors : "writes"
+    borrowers ||--o{ loans : "borrows"
+    books ||--o{ loans : "loaned in"
