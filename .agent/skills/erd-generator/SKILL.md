@@ -1,25 +1,35 @@
 ---
 name: erd-generator
-description: Generates an Entity-Relationship Diagram (ERD) from a Mermaid schema file when requested to design an ERD, data model, or architecture diagram.
+description: Designs and generates an Entity-Relationship Diagram (ERD) from data requirements or a Mermaid schema file, rendering it to an SVG.
 ---
 
 # ERD Generator Skill
 
-This skill allows you to generate an Entity-Relationship Diagram (ERD) from a Mermaid schema file. It uses the `mmdc` command-line tool to render the diagram as an SVG file.
+Generates an Entity-Relationship Diagram (ERD) using Mermaid syntax and renders it to SVG using the `render_erd.js` script.
 
-## Usage
+## Preconditions
+- Ensure the output directory `docs/architecture` exists before writing files.
+- Ensure Node.js and npm/npx are available in the runtime environment.
 
-1. Ensure you have a Mermaid schema file located at `docs/architecture/schema.mmd`.
-2. Run the script `scripts/render_erd.js` to generate the ERD.
-3. The generated ERD will be saved as `docs/architecture/erd.svg`.
+## Execution Workflow
 
-## Execution Workflow:
-- Parse domain requirements into entities, primary keys (PK), foreign keys (FK), and cardinalities.
+1. **Model Domain Requirements:**
+   - Parse requirements into entities, attributes, primary keys (`PK`), foreign keys (`FK`), and cardinalities (`||--o{`, `||--||`, etc.).
+   - Follow standard Mermaid `erDiagram` syntax.
 
-- Write the drafted Mermaid schema to `docs/architecture/schema.mmd`.
+2. **Write Schema:**
+   - Save the Mermaid definition to `docs/architecture/schema.mmd`.
 
-- Execute node scripts/render_erd.js docs/architecture/schema.mmd.
+3. **Render Diagram:**
+   - Run the rendering script:
+     ```bash
+     node scripts/render_erd.js
+     ```
 
-- **Self-Correction Loop:** If execution fails with SYNTAX_ERROR, parse the error trace, adjust the Mermaid syntax in `docs/architecture/schema.mmd`, and re-run the script (up to 3 retries allowed).
+4. **Self-Correction Loop:**
+   - If the script exits with `SYNTAX_ERROR`, inspect the error trace, correct the syntax errors in `docs/architecture/schema.mmd`, and re-run `node scripts/render_erd.js`.
+   - Allow a maximum of 3 retries.
 
-- **Final Output:**Present the raw Mermaid block to the user and reference the generated ERD in `docs/architecture/erd.svg`.
+5. **Deliver Output:**
+   - Present the final Mermaid code block to the user.
+   - Reference the rendered artifact at `docs/architecture/erd.svg`.
